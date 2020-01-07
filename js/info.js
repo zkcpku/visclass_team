@@ -1,6 +1,10 @@
 
 
 var node_link_data;
+var OPACITY = {
+    node: 1,
+    link: 0.8
+};
 
 function show(data_dict, iter = 'Peking University'){
     d3.select('.rightBar').classed('rightBar-moved', true);
@@ -32,7 +36,7 @@ function init_data(origin_data){
     }
     return data_dict;
 }
-d3.json('institution_info.json',function(data){
+d3.json('data/institution_info.json',function(data){
     // console.log(data);
     data_dict = init_data(data);
 
@@ -68,7 +72,7 @@ function chart1() {
           .attr("width", width)
           .attr("height", height);
 
-      d3.json("node_link_school.json", function(data) {
+      d3.json("data/node_link_school.json", function(data) {
         console.log(data);
         node_link_data = data;
         var n = data.nodes.length;
@@ -102,6 +106,7 @@ function chart1() {
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; })
+            .attr("opacity",OPACITY.link)
             .style("stroke-width", function(d) { return Math.sqrt(d.value); });
 
         var node = svg.selectAll(".node")
@@ -111,11 +116,12 @@ function chart1() {
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
             .attr("r", 4.5)
+            .attr("opacity",OPACITY.node)
             .style("fill", function(d) { return color(d.group); })
             // .call(force.drag);
             .on("mouseover",function(d){
                 // console.log();
-                if (d3.select(this).attr('opacity') == 1) {
+                if (d3.select(this).attr('opacity') == OPACITY.node) {
                     show(data_dict,d.name);
                 }
               // console.log(d);
@@ -125,19 +131,19 @@ function chart1() {
               unshow();
             })
 
-        svg.on("mousemove", function() {
-          fisheye.focus(d3.mouse(this));
+        // svg.on("mousemove", function() {
+        //   fisheye.focus(d3.mouse(this));
 
-          node.each(function(d) { d.fisheye = fisheye(d); })
-              .attr("cx", function(d) { return d.fisheye.x; })
-              .attr("cy", function(d) { return d.fisheye.y; })
-              .attr("r", function(d) { return d.fisheye.z * 4.5; });
+        //   node.each(function(d) { d.fisheye = fisheye(d); })
+        //       .attr("cx", function(d) { return d.fisheye.x; })
+        //       .attr("cy", function(d) { return d.fisheye.y; })
+        //       .attr("r", function(d) { return d.fisheye.z * 4.5; });
 
-          link.attr("x1", function(d) { return d.source.fisheye.x; })
-              .attr("y1", function(d) { return d.source.fisheye.y; })
-              .attr("x2", function(d) { return d.target.fisheye.x; })
-              .attr("y2", function(d) { return d.target.fisheye.y; });
-        });
+        //   link.attr("x1", function(d) { return d.source.fisheye.x; })
+        //       .attr("y1", function(d) { return d.source.fisheye.y; })
+        //       .attr("x2", function(d) { return d.target.fisheye.x; })
+        //       .attr("y2", function(d) { return d.target.fisheye.y; });
+        // });
       });
 }
 chart1();
@@ -152,11 +158,11 @@ function changeShow(select = 'world'){
     var node = svg.selectAll(".node")
                 .attr("opacity",function(d){
                     if (select == 'world') {
-                            return 1;
+                            return OPACITY.node;
                     }
                     else if (select == 'northamerica') {
                         if (northamerica_list.indexOf(d.region) != -1) {
-                            return 1;
+                            return OPACITY.node;
                         }
                         else {
                             return 0;
@@ -165,7 +171,7 @@ function changeShow(select = 'world'){
                     }
                     else{
                         if (d.region == select) {
-                            return 1;
+                            return OPACITY.node;
                         }
                         else {
                             return 0;
@@ -177,11 +183,11 @@ function changeShow(select = 'world'){
     var link = svg.selectAll(".link")
                 .attr("opacity",function(d){
                     if (select == 'world') {
-                        return 0.2;
+                        return OPACITY.link;
                     }
                     else if (select == 'northamerica') {
                         if (northamerica_list.indexOf(d.source.region) != -1 && northamerica_list.indexOf(d.target.region) != -1) {
-                            return 0.2;
+                            return OPACITY.link;
                         }
                         else {
                             return 0;
@@ -190,7 +196,7 @@ function changeShow(select = 'world'){
                     }
                     else{
                     if (d.source.region == select && d.target.region == select) {
-                        return 0.2;
+                        return OPACITY.link;
                     }
                     else {
                         return 0;
