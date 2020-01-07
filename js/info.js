@@ -6,6 +6,8 @@ var OPACITY = {
     link: 0.8
 };
 
+var regions = ['africa', 'asia', 'australasia', 'canada', 'europe', 'none', 'southamerica'];
+
 function show(data_dict, iter = 'Peking University'){
     d3.select('.rightBar').classed('rightBar-moved', true);
     d3.select('#bar_image1').attr('src', data_dict[iter].pic[0])
@@ -51,6 +53,7 @@ function chart1() {
           height = 700;
 
       var color = d3.scale.category20();
+
       // var color = d3.scaleLinear()
       //   .domain([0, 100])
       //   .range(["brown", "steelblue"]);
@@ -117,18 +120,43 @@ function chart1() {
             .attr("cy", function(d) { return d.y; })
             .attr("r", 4.5)
             .attr("opacity",OPACITY.node)
-            .style("fill", function(d) { return color(d.group); })
+            .style("fill", function(d) { return color(regions.indexOf(d.region) + 1); })
             // .call(force.drag);
             .on("mouseover",function(d){
-                // console.log();
+                // console.log(d);
                 if (d3.select(this).attr('opacity') == OPACITY.node) {
                     show(data_dict,d.name);
                 }
+                nei = d.neighbors;
+                nei.push(d.name);
+                svg.selectAll(".node")
+                    .attr("opacity",function(dd){
+                        if (d3.select(this).attr('opacity') != OPACITY.node) {
+                            return d3.select(this).attr('opacity');
+                        }
+                        else if (nei.indexOf(dd.name) != -1) {
+                            return OPACITY.node;
+                        }
+                        else {
+                            return OPACITY.node / 4;
+                        }
+                    })
+                    .transition();
               // console.log(d);
               
             })
             .on("mouseout",function(){
               unshow();
+                svg.selectAll(".node")
+                    .attr("opacity",function(dd){
+                        if (d3.select(this).attr('opacity') == OPACITY.node / 4) {
+                            return OPACITY.node;
+                        }
+                        else{
+                            return d3.select(this).attr('opacity');
+                        }
+                    })
+                    .transition();
             })
 
         // svg.on("mousemove", function() {
