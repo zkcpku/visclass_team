@@ -26,7 +26,7 @@
   position: absolute;
   top: -17px;
   font-size: 8px;
-  background: white;
+  background: rgba(255, 255, 255, 0);
   white-space: nowrap;
   line-height: 1;
 }
