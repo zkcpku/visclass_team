@@ -120,7 +120,7 @@ min-width:298px;
 border-radius:3px;
 box-shadow:0 6.4px 14.4px 0 rgba(0,0,0,.132),0 1.2px 3.6px 0 rgba(0,0,0,.108);
 width:calc(16% + 60px);
-height: 77%;
+
 padding:20px 6px 10px 24px;
 position:fixed;
 top:24px;
@@ -204,4 +204,37 @@ max-height:100%;
   stroke: steelblue;
   /*opacity: 0.5;*/
   clip-path: url(#clip);
+}
+
+
+#chart1 {
+  width: 1400px;
+  height: 700px;
+  /*border: solid 1px #ccc;*/
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+.background {
+  fill: none;
+  pointer-events: all;
+}
+
+#chart1 .node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+#chart1 .link {
+  stroke: #999;
+  stroke-opacity: .6;
+  stroke-width: 1.5px;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #fff;
+  shape-rendering: crispEdges;
 }
