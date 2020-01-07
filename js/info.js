@@ -52,10 +52,10 @@ function chart1() {
       //   .range(["brown", "steelblue"]);
 
       var fisheye = d3.fisheye.circular()
-          .radius(120);
+          .radius(60);
 
       var force = d3.layout.force()
-          .charge(-480)
+          .charge(-960)
           .linkDistance(80)
           .size([width, height]);
 
@@ -114,26 +114,30 @@ function chart1() {
             .style("fill", function(d) { return color(d.group); })
             // .call(force.drag);
             .on("mouseover",function(d){
-              console.log(d);
-              show(data_dict,d.name);
+                // console.log();
+                if (d3.select(this).attr('opacity') == 1) {
+                    show(data_dict,d.name);
+                }
+              // console.log(d);
+              
             })
             .on("mouseout",function(){
               unshow();
             })
 
-        // svg.on("mousemove", function() {
-        //   // fisheye.focus(d3.mouse(this));
+        svg.on("mousemove", function() {
+          fisheye.focus(d3.mouse(this));
 
-        //   node.each(function(d) { d.fisheye = fisheye(d); })
-        //       .attr("cx", function(d) { return d.fisheye.x; })
-        //       .attr("cy", function(d) { return d.fisheye.y; })
-        //       .attr("r", function(d) { return d.fisheye.z * 4.5; });
+          node.each(function(d) { d.fisheye = fisheye(d); })
+              .attr("cx", function(d) { return d.fisheye.x; })
+              .attr("cy", function(d) { return d.fisheye.y; })
+              .attr("r", function(d) { return d.fisheye.z * 4.5; });
 
-        //   link.attr("x1", function(d) { return d.source.fisheye.x; })
-        //       .attr("y1", function(d) { return d.source.fisheye.y; })
-        //       .attr("x2", function(d) { return d.target.fisheye.x; })
-        //       .attr("y2", function(d) { return d.target.fisheye.y; });
-        // });
+          link.attr("x1", function(d) { return d.source.fisheye.x; })
+              .attr("y1", function(d) { return d.source.fisheye.y; })
+              .attr("x2", function(d) { return d.target.fisheye.x; })
+              .attr("y2", function(d) { return d.target.fisheye.y; });
+        });
       });
 }
 chart1();
@@ -173,11 +177,11 @@ function changeShow(select = 'world'){
     var link = svg.selectAll(".link")
                 .attr("opacity",function(d){
                     if (select == 'world') {
-                        return 1;
+                        return 0.2;
                     }
                     else if (select == 'northamerica') {
                         if (northamerica_list.indexOf(d.source.region) != -1 && northamerica_list.indexOf(d.target.region) != -1) {
-                            return 1;
+                            return 0.2;
                         }
                         else {
                             return 0;
@@ -186,7 +190,7 @@ function changeShow(select = 'world'){
                     }
                     else{
                     if (d.source.region == select && d.target.region == select) {
-                        return 1;
+                        return 0.2;
                     }
                     else {
                         return 0;
